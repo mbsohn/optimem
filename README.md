@@ -21,7 +21,7 @@ devtools::install_github(“mbsohn/optimem”)
 ### Example: Determine non-ADA taxa
 
 ``` r
-library(optimem)
+library(tidyverse); library(optimem)
 # Simulate a dataset using a negative binomial model
 set.seed(2023)
 p <- 100; n.non.da <- sample(40:90, 1)
