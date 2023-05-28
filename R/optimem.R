@@ -145,7 +145,11 @@ optimem <- function(M, y, eta=0.1, alpha=0.05, n.k=NULL, n.b=500, n.r=1000,
                 excl.taxa <- which(apply(M[y==grp.id[i],], 2, function(x) sum(x>0)) < n.obs.grp[i]*0.1)
         }
         excl.taxa <- sort(unique(excl.taxa))
-        M.ex <- M[,-excl.taxa]
+        if(length(excl.taxa)>0){
+                M.ex <- M[,-excl.taxa]
+        } else{
+                M.ex <- M
+        }
         tmp.rslt <- ss_kb(M.ex, y, eta=eta, n.k=n.k, n.b=n.b, n.r=n.r, min.nonADA=min.nonADA)
         ref.rslt <- ss_br(M.ex, y, n.perm=n.perm, n.b=n.b, n.r=n.r)
         b.hat <- sapply(tmp.rslt,"[[",1)
