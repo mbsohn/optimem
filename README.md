@@ -58,9 +58,8 @@ ADA.p <- p.adjust(ADA.test, method="BH")
 names(which(ADA.p < 0.05)) 
 ```
 
-    ##  [1] "T1"  "T2"  "T5"  "T7"  "T8"  "T9"  "T10" "T11" "T13" "T14" "T16" "T18"
-    ## [13] "T20" "T25" "T26" "T29" "T32" "T34" "T35" "T36" "T37" "T39" "T40" "T41"
-    ## [25] "T42" "T44" "T45" "T91"
+    ##  [1] "T1"  "T2"  "T5"  "T8"  "T9"  "T11" "T13" "T16" "T18" "T20" "T25" "T26"
+    ## [13] "T29" "T32" "T34" "T35" "T36" "T37" "T39" "T40" "T41" "T42" "T44" "T45"
 
 To account for covariates, a probabilistic index model, which can be
 seen as the rank-equivalent of the general linear model, can be used.
