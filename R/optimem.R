@@ -1,11 +1,10 @@
-library(foreach); library(doParallel)
-ss_kb <- function(M, y, eta, n.k, n.b, n.r, min.nonDA){
+ss_kb <- function(M, y, eta, n.k, n.b, n.r, min.nonADA){
         n.sample <- nrow(M); n.taxa <- ncol(M)
         gid <- unique(y); n.gid <- length(gid)
         g.mtx <- matrix(0, nrow=n.sample, ncol=n.gid)
         for(i in 1:n.gid) g.mtx[,i] <- ifelse(y==gid[i], 1, 0)
         j.G <- rep(1, n.gid); n.g <- colSums(g.mtx)
-        if(is.null(n.k)) n.k <- ceiling(log(min.nonDA+2/n.taxa)/log(1-eta))
+        if(is.null(n.k)) n.k <- ceiling(log(min.nonADA+2/n.taxa)/log(1-eta))
         n.cores <- detectCores()
         optimem.cl <- makeCluster(n.cores-1)
         registerDoParallel(cl=optimem.cl)
@@ -138,16 +137,20 @@ ss_br <- function(M, y, n.perm, n.b, n.r){
         return(f.rslt0)
 }
 
-optimem <- function(M, y, eta=0.1, alpha=0.05, n.k=NULL, n.b=500, n.r=500, 
-                    min.nonDA=0.1, n.perm=20, k.sel.plot=TRUE){
+optimem <- function(M, y, eta=0.1, alpha=0.05, n.k=NULL, n.b=200, n.r=300,
+                    min.nonADA=0.1, n.perm=20, k.sel.plot=TRUE){
         grp.id <- unique(y); n.grp <- length(grp.id)
         n.obs.grp <- table(y); excl.taxa <- NULL
         for(i in 1:n.grp){
                 excl.taxa <- which(apply(M[y==grp.id[i],], 2, function(x) sum(x>0)) < n.obs.grp[i]*0.1)
         }
-        excl.taxa <- unique(excl.taxa) %>% sort()
-        M.ex <- M[,-excl.taxa]
-        tmp.rslt <- ss_kb(M.ex, y, eta=eta, n.k=n.k, n.b=n.b, n.r=n.r, min.nonDA=min.nonDA)
+        excl.taxa <- sort(unique(excl.taxa))
+        if(length(excl.taxa)>0){
+                M.ex <- M[,-excl.taxa]
+        } else{
+                M.ex <- M
+        }
+        tmp.rslt <- ss_kb(M.ex, y, eta=eta, n.k=n.k, n.b=n.b, n.r=n.r, min.nonADA=min.nonADA)
         ref.rslt <- ss_br(M.ex, y, n.perm=n.perm, n.b=n.b, n.r=n.r)
         b.hat <- sapply(tmp.rslt,"[[",1)
         opt.min.kb <- which(b.hat == min(b.hat))
@@ -167,16 +170,16 @@ optimem <- function(M, y, eta=0.1, alpha=0.05, n.k=NULL, n.b=500, n.r=500,
                 geom_abline(slope=0, intercept=ll.kb, color="gray70", linetype="dotted") +
                 geom_point(aes(x=opt.min.kb, y=b.hat[opt.min.kb]), color="coral4")
         if(k.sel.plot==TRUE) print(k.sel.plt)
-        nonDA.min <- matrix(gtools::mixedsort(tmp.rslt[[opt.min.kb]]$b.hat.taxa), ncol=1)
-        colnames(nonDA.min) <- "Remaining Taxa at min(MSS)"; rownames(nonDA.min) <- 1:length(nonDA.min)
-        optimem.rslt <- list(nonDAtaxa_min=nonDA.min, mss_taxa=tmp.rslt, mean_null=mean.kb,
-                             upper_limit_null=ul.kb, lower_limit_null=ll.kb)
+        nonADA.min <- matrix(gtools::mixedsort(tmp.rslt[[opt.min.kb]]$b.hat.taxa), ncol=1)
+        colnames(nonADA.min) <- "Remaining Taxa at min(MSS)"; rownames(nonADA.min) <- 1:length(nonADA.min)
+        optimem.rslt <- list(nonADAtaxa_min=nonADA.min, mss_taxa=tmp.rslt, min_MSS=opt.min.kb,
+                             mean_null=mean.kb, upper_limit_null=ul.kb, lower_limit_null=ll.kb)
         class(optimem.rslt) <- "optimem"
         return(optimem.rslt)
 }
 
 print.optimem <- function(x, ...){
-        cat("Remaining taxa at min(MSS): ", x$nonDAtaxa_min)
+        cat("Remaining Taxa at min(MSS): ", x$nonADAtaxa_min)
 }
 
 plot.optimem <- function(x, ...){
@@ -186,6 +189,7 @@ plot.optimem <- function(x, ...){
         ul.kb <- x$upper_limit_null
         ll.kb <- x$lower_limit_null
         n.rs <- length(b.hat)
+        s <- mss <- NULL
         k.sel.dat <- data.frame(s=1:n.rs, mss=b.hat)
         ggplot(k.sel.dat, aes(x=s, y=mss)) +
                 geom_point(color="gray40") +
