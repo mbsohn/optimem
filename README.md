@@ -10,7 +10,7 @@ Note: OPTIMEM is computationally intensive. It may take several hours,
 depending on the number of taxa and the proportion of removed taxa at
 each removal step (eta). As a default, eta is set at 0.1. It has to be
 reduced if the computed MSS does not decrease as the sequential removal
-step increases.
+step increases. We also recommend using large numbers of the random selection and amalgamation steps (e.g., n.b=500, n.r=1000). When eta is set at a very small value (< 1/number of taxa), one taxon will be removed at each removal step and n.b will be ignored.
 
 ### Installation
 
@@ -38,12 +38,7 @@ y <- c(rep(1, n1), rep(2, n2))
 colnames(M) <- paste0("T", 1:n.taxa)
 true.da.taxa <- colnames(M)[which(mu1 != mu2)]
 
-# Run OPTIMEM: Default values for a proportion of taxa removed at each removal step,
-# the number of randome selections, and the number of random amalgamations are set at:
-# eta=0.1, n.b=200, and n.r=300, respectively. For real microbiome data, we recommend
-# using a very small value of eta (e.g., eta=0.001) such that one taxon is removed at
-# each removal step and a large number of n.r (e.g., n.r=1000). Note: n.b is ignored
-# when a taxon is removed at each removal.
+# Run OPTIMEM:
 rslt <- optimem(M, y)
 ```
 
