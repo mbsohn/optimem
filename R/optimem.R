@@ -137,7 +137,7 @@ ss_br <- function(M, y, n.perm, n.b, n.r){
         return(f.rslt0)
 }
 
-optimem <- function(M, y, eta=0.1, alpha=0.05, n.k=NULL, n.b=500, n.r=1000,
+optimem <- function(M, y, eta=0.1, alpha=0.05, n.k=NULL, n.b=200, n.r=300,
                     min.nonADA=0.1, n.perm=20, k.sel.plot=TRUE){
         grp.id <- unique(y); n.grp <- length(grp.id)
         n.obs.grp <- table(y); excl.taxa <- NULL
