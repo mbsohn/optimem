@@ -1,8 +1,3 @@
-README
-================
-Michael B. Sohn
-5/15/2023
-
 ## OPTIMEM: Optimal Normalization Method for Sparse Compositional Data
 
 The optimem function determines non-absolutely, differentially abundant
@@ -15,7 +10,7 @@ Note: OPTIMEM is computationally intensive. It may take several hours,
 depending on the number of taxa and the proportion of removed taxa at
 each removal step (eta). As a default, eta is set at 0.1. It has to be
 reduced if the computed MSS does not decrease as the sequential removal
-step increases.
+step increases. We also recommend using large numbers of the random selection and amalgamation steps (e.g., n.b=500, n.r=1000). When eta is set at a very small value (< 1/number of taxa), one taxon will be removed at each removal step and n.b will be ignored.
 
 ### Installation
 
@@ -26,7 +21,7 @@ devtools::install_github(“mbsohn/optimem”)
 ### Example: Determine non-ADA taxa
 
 ``` r
-library(optimem)
+library(tidyverse); library(optimem)
 # Simulate a dataset using a negative binomial model
 set.seed(2023)
 p <- 100; n.non.da <- sample(40:90, 1)
@@ -42,7 +37,8 @@ n.sample <- nrow(M); n.taxa <- ncol(M)
 y <- c(rep(1, n1), rep(2, n2))
 colnames(M) <- paste0("T", 1:n.taxa)
 true.da.taxa <- colnames(M)[which(mu1 != mu2)]
-# Run OPTIMEM
+
+# Run OPTIMEM:
 rslt <- optimem(M, y)
 ```
 
@@ -57,14 +53,13 @@ if(rslt$min_MSS < rslt$lower_limit_null){
 } else{
      MDA <- sweep(M, 1, rowSums(M[, det.nonADA]), "/")
 }
-DA.test <- apply(MDA, 2, function(x) wilcox.test(x~y)$p.value)
-DA.p <- p.adjust(DA.test, method="BH")
-names(which(DA.p < 0.05))
+ADA.test <- apply(MDA, 2, function(x) wilcox.test(x~y)$p.value)
+ADA.p <- p.adjust(ADA.test, method="BH")
+names(which(ADA.p < 0.05)) 
 ```
 
-    ##  [1] "T1"  "T2"  "T5"  "T7"  "T8"  "T9"  "T10" "T11" "T13" "T14" "T16" "T18"
-    ## [13] "T20" "T25" "T26" "T29" "T32" "T34" "T35" "T36" "T37" "T39" "T40" "T41"
-    ## [25] "T42" "T44" "T45" "T91"
+    ##  [1] "T1"  "T2"  "T5"  "T8"  "T9"  "T11" "T13" "T16" "T18" "T20" "T25" "T26"
+    ## [13] "T29" "T32" "T34" "T35" "T36" "T37" "T39" "T40" "T41" "T42" "T44" "T45"
 
 To account for covariates, a probabilistic index model, which can be
 seen as the rank-equivalent of the general linear model, can be used.
