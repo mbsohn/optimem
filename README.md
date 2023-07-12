@@ -55,7 +55,7 @@ if(rslt$min_MSS < rslt$lower_limit_null){
 }
 ADA.test <- apply(MDA, 2, function(x) wilcox.test(x~y)$p.value)
 ADA.p <- p.adjust(ADA.test, method="BH")
-names(which(ADA.p < 0.05))
+names(which(ADA.p < 0.05)) 
 ```
 
     ##  [1] "T1"  "T2"  "T5"  "T7"  "T8"  "T9"  "T10" "T11" "T13" "T14" "T16" "T18"
