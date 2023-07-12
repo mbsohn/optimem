@@ -7,7 +7,7 @@ Optimal Normalization Method for Sparse Compositional Data
 Determine non-absolutely, differentially abundant (ADA) taxa that are used to remove the compositional effects using a sequential removal and random amalgamation procedure
 }
 \usage{
-optimem(M, y, eta=0.1, alpha=0.05, n.k=NULL, n.b=500, n.r=1000,
+optimem(M, y, eta=0.1, alpha=0.05, n.k=NULL, n.b=200, n.r=300,
         min.nonADA=0.1, n.perm=20, k.sel.plot=TRUE)
 }
 \arguments{

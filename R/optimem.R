@@ -158,7 +158,7 @@ optimem <- function(M, y, eta=0.1, alpha=0.05, n.k=NULL, n.b=200, n.r=300,
         ul.kb <- quantile(ref.rslt, 1-alpha/2)
         ll.kb <- quantile(ref.rslt, alpha/2)
         n.rs <- length(tmp.rslt)
-        
+        s <- mss <- NULL
         k.sel.dat <- data.frame(s=1:n.rs, mss=b.hat)
         k.sel.plt <- ggplot(k.sel.dat, aes(x=s, y=mss)) +
                 geom_point(color="gray40") +
