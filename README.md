@@ -40,10 +40,10 @@ true.da.taxa <- colnames(M)[which(mu1 != mu2)]
 
 # Run OPTIMEM: Default values for a proportion of taxa removed at each removal step,
 # the number of randome selections, and the number of random amalgamations are set at:
-# eta=0.1, n.b=200, and n.r=300, respectively. For real data analysis, we recommend a
-# very small value of eta (e.g., eta=0.001) such that one taxon is removed at each removal
-# step and a large number of n.r (e.g., n.r=1000). Note: n.b is ignored when a taxon is
-# removed at each removal.
+# eta=0.1, n.b=200, and n.r=300, respectively. For real microbiome data, we recommend
+# using a very small value of eta (e.g., eta=0.001) such that one taxon is removed at
+# each removal step and a large number of n.r (e.g., n.r=1000). Note: n.b is ignored
+# when a taxon is removed at each removal.
 rslt <- optimem(M, y)
 ```
 
