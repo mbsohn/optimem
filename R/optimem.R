@@ -170,10 +170,10 @@ optimem <- function(M, y, eta=0.1, alpha=0.05, n.k=NULL, n.b=500, n.r=1000,
                 geom_abline(slope=0, intercept=ll.kb, color="gray70", linetype="dotted") +
                 geom_point(aes(x=opt.min.kb, y=b.hat[opt.min.kb]), color="coral4")
         if(k.sel.plot==TRUE) print(k.sel.plt)
-        nonDA.min <- matrix(gtools::mixedsort(tmp.rslt[[opt.min.kb]]$b.hat.taxa), ncol=1)
-        colnames(nonDA.min) <- "Remaining Taxa at min(MSS)"; rownames(nonDA.min) <- 1:length(nonDA.min)
-        optimem.rslt <- list(nonDAtaxa_min=nonDA.min, mss_taxa=tmp.rslt, mean_null=mean.kb,
-                             upper_limit_null=ul.kb, lower_limit_null=ll.kb)
+        nonADA.min <- matrix(gtools::mixedsort(tmp.rslt[[opt.min.kb]]$b.hat.taxa), ncol=1)
+        colnames(nonADA.min) <- "Remaining Taxa at min(MSS)"; rownames(nonADA.min) <- 1:length(nonADA.min)
+        optimem.rslt <- list(nonADAtaxa_min=nonADA.min, mss_taxa=tmp.rslt, min_MSS=opt.min.kb,
+                             mean_null=mean.kb, upper_limit_null=ul.kb, lower_limit_null=ll.kb)
         class(optimem.rslt) <- "optimem"
         return(optimem.rslt)
 }
