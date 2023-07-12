@@ -37,7 +37,13 @@ n.sample <- nrow(M); n.taxa <- ncol(M)
 y <- c(rep(1, n1), rep(2, n2))
 colnames(M) <- paste0("T", 1:n.taxa)
 true.da.taxa <- colnames(M)[which(mu1 != mu2)]
-# Run OPTIMEM
+
+# Run OPTIMEM: Default values for a proportion of taxa removed at each removal step,
+# the number of randome selections, and the number of random amalgamations are set at:
+# eta=0.1, n.b=200, and n.r=300, respectively. For real data analysis, we recommend a
+# very small value of eta (e.g., eta=0.001) such that one taxon is removed at each removal
+# step and a large number of n.r (e.g., n.r=1000). Note: n.b is ignored when a taxon is
+# removed at each removal.
 rslt <- optimem(M, y)
 ```
 
@@ -52,9 +58,9 @@ if(rslt$min_MSS < rslt$lower_limit_null){
 } else{
      MDA <- sweep(M, 1, rowSums(M[, det.nonADA]), "/")
 }
-DA.test <- apply(MDA, 2, function(x) wilcox.test(x~y)$p.value)
-DA.p <- p.adjust(DA.test, method="BH")
-names(which(DA.p < 0.05))
+ADA.test <- apply(MDA, 2, function(x) wilcox.test(x~y)$p.value)
+ADA.p <- p.adjust(ADA.test, method="BH")
+names(which(ADA.p < 0.05))
 ```
 
     ##  [1] "T1"  "T2"  "T5"  "T7"  "T8"  "T9"  "T10" "T11" "T13" "T14" "T16" "T18"
