@@ -66,7 +66,7 @@ rslt <- optimem(M, y)
 # Differential abundance analysis using the Wilcoxon signed-rank test
 det.nonDA <- rslt$nonDAtaxa_min
 if(rslt$min_MSS < rslt$lower_limit_null){
-     MDA <- sweep(M[,!(colnames(M) %in% det.nonDA)], 1, rowSums(M[, det.nonDA]), "/")
+     MDA <- sweep(M[,!(colnames(M) \%in\% det.nonDA)], 1, rowSums(M[, det.nonDA]), "/")
 } else{
      MDA <- sweep(M, 1, rowSums(M[, det.nonDA]), "/")
 }
