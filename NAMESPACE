@@ -1,0 +1,4 @@
+import(stats, ggplot2, parallel, foreach, doParallel, gtools)
+export(optimem)
+S3method(print, optimem)
+S3method(plot, optimem)
