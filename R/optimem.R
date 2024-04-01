@@ -226,7 +226,11 @@ optimem <- function(M, y, eta=0.1, alpha=0.05, n.k=NULL, n.b=200, n.r=300,
 }
 
 print.optimem <- function(x, ...){
-        cat("Remaining Taxa at min(MSS): ", x$nonDAtaxa_min)
+        if(x$mss_taxa[[x$min_MSS]]$b.hat > x$upper_limit_null){
+                cat("Warning!!! Not conclusive. If there is no downward trend after some k, all taxa are likely DA taxa. Otherswise, set eta to a smaller value if it is not less than 1/p and rerun OPTIMEM only with remaining taxa at some k in the downward trend.")
+        } else{
+                cat("Remaining Taxa at min(MSS): ", x$nonDAtaxa_min)
+        }
 }
 
 plot.optimem <- function(x, ...){
