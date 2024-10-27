@@ -181,7 +181,7 @@ optimem <- function(M, y, eta=0.1, alpha=0.05, n.k=NULL, n.b=200, n.r=300,
         grp.id <- unique(y); n.grp <- length(grp.id)
         n.obs.grp <- table(y); excl.taxa <- NULL
         for(i in 1:n.grp){
-                excl.taxa <- which(apply(M[y==grp.id[i],], 2, function(x) sum(x>0)) < n.obs.grp[i]*0.1)
+                excl.taxa <- c(excl.taxa, which(apply(M[y==grp.id[i],], 2, function(x) sum(x>0)) < n.obs.grp[i]*0.1))
         }
         excl.taxa <- sort(unique(excl.taxa))
         if(length(excl.taxa)>0){
@@ -214,6 +214,7 @@ optimem <- function(M, y, eta=0.1, alpha=0.05, n.k=NULL, n.b=200, n.r=300,
         if(k.sel.plot==TRUE) print(k.sel.plt)
         if(tmp.rslt[[n.rs]]$is.all.taxa.nonDA==TRUE){
                 print("All taxa are non-DA or noise levels are larger than signals!!!")
+                if(length(excl.taxa)>0) cat("Excluded Taxa Before Running OPTIMEM: ", excl.taxa)
                 return(NULL)
         } else{
                 nonDA.min <- matrix(gtools::mixedsort(tmp.rslt[[opt.min.kb]]$b.hat.taxa), ncol=1)
